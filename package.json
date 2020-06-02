@@ -1,0 +1,22 @@
+{
+  "name": "faq-chrome-extension",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "copy": "copyfiles manifest.json dist/ && copyfiles src/background.js -u 1 background.js",
+    "cleandir": "rm -rf dist/*",
+    "build": "npm run cleandir && npm run copy && webpack --config=build-configs/webpack.config.js",
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "copyfiles": "^2.3.0",
+    "css-loader": "^3.5.3",
+    "html-webpack-plugin": "^4.3.0",
+    "sass": "^1.26.7",
+    "sass-loader": "^8.0.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}

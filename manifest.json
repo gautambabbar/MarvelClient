@@ -1,0 +1,11 @@
+{
+  "name": "Getting Started Example",
+  "version": "0.1",
+  "description": "Build an Extension!",
+  "permissions": ["tabs"],
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "content_security_policy": "script-src 'self' https://gstatic.com https://*.firebaseapp.com https://*.firebaseio.com; object-src 'self'",
+  "manifest_version": 2
+}
