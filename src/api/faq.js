@@ -17,7 +17,7 @@ export function fetchFAQ(domain) {
 export function fetchAllFAQs() {
   return db.collection(FAQ_COLLECTION_NAME).get().then((snapshot) => {
     return snapshot.docs.map((doc) => ({
-      name: doc,
+      name: doc.id,
       faq: doc.data()
     }))
   });

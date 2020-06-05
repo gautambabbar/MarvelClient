@@ -1,12 +1,12 @@
 import * as firebase from 'firebase/app';
-import 'firebase/analytics';
+// import 'firebase/analytics';
 import 'firebase/firestore';
 import { PROJECT_ID } from './constants';
 
 
 firebase.initializeApp({
   apiKey: "AIzaSyD0pSr_yOvPeCvIolYWqyvwNNyi7P8O6zc",
-  authDomain: "extension-api-e8253.firebaseapp.com",
+  // authDomain: "extension-api-e8253.firebaseapp.com",
   databaseURL: "https://extension-api-e8253.firebaseio.com",
   projectId: PROJECT_ID,
   messagingSenderId: "578395959214",
@@ -14,7 +14,7 @@ firebase.initializeApp({
   measurementId: "G-XKY2KWWX3L"
 });
 
-firebase.analytics();
+// firebase.analytics();
 
 
 
