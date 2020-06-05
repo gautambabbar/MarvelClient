@@ -5,8 +5,6 @@ import AppComponent from './components/app.js';
 
 
 function renderContent() {
-  console.log(2);
-  
   ReactDom.render(<AppComponent />, document.getElementById('root'));
 }
 
