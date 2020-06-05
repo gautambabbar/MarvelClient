@@ -1,5 +1,69 @@
+body {
+  font-family: Roboto;
+  font-size: 16px;
+  color: #333;
+}
+
 main {
   background-color: #FFFFFF;
   width: 300px;
   height: 300px;
+  padding: 20px;
+}
+
+.center-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-hz {
+  display: flex;
+  justify-content: center;
+}
+
+.center-vertical {
+  display: flex;
+  align-items: center;
+}
+
+.bar-wave-loader {
+  height: 64px;
+}
+
+.flx {
+  display: flex;
+
+  &-auto {
+    flex: 1;
+  }
+
+  &-vertical {
+    flex-direction: column;
+  }
+}
+
+.h100 {
+  height: 100%;
+}
+
+.btn {
+  background-color: #00bcd4;
+  color: #FFF;
+  font-weight: 500;
+  border: 1px solid #00bcd4;
+  padding: 8px 24px;
+  border-radius: 4px;
+  font-family: Roboto;
+  font-size: 12px; 
+  line-height: 16px;
+  box-shadow: 0 2px 2px 0 rgba(0,188,212,.14), 0 3px 1px -2px rgba(0,188,212,.2), 0 1px 5px 0 rgba(0,188,212,.12);
+
+  &:hover {
+    box-shadow: 0 14px 26px -12px #00bcd46b, 0 4px 23px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,188,212,.2);
+  }
+
+  &:not(:disabled) {
+    cursor: pointer
+  }
 }
