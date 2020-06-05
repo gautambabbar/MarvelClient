@@ -7,7 +7,6 @@ module.exports = {
     path: path.resolve(__dirname, '../dist'),
     filename: 'bundle.js'
   },
-  devtool: 'inline-source-map',
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -25,7 +24,13 @@ module.exports = {
           'sass-loader',
         ],
       },
-
-    ],
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader'
+        }
+      }
+    ]
   }
 };

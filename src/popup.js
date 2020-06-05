@@ -1,14 +1,17 @@
-// import './styles.scss';
+import React from 'react';
+import ReactDom from 'react-dom';
+import './firebase-init';
+import AppComponent from './components/app.js';
 
 
-
-chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-  const mainSection = document.getElementsByTagName('main')[0];
-  console.dir(tabs);
-  let url = tabs[0].url;
-
-  var database = firebase.database();
+function renderContent() {
+  console.log(2);
   
-  mainSection.innerText = url;
-  // use `url` here inside the callback because it's asynchronous!
+  ReactDom.render(<AppComponent />, document.getElementById('root'));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderContent();
 });
+
+

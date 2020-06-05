@@ -6,17 +6,36 @@
   "scripts": {
     "copy": "copyfiles manifest.json dist/ && copyfiles src/background.js -u 1 background.js",
     "cleandir": "rm -rf dist/*",
-    "build": "npm run cleandir && npm run copy && webpack --config=build-configs/webpack.config.js",
+    "clean": "npm run cleandir && npm run copy",
+    "build": "webpack --config=build-configs/webpack.config.dev.js && npm run copy",
+    "dev": "webpack --watch --config=build-configs/webpack.config.dev.js && npm run copy",
+    "prod": "webpack --config=build-configs/webpack.config.prod.js && npm run copy"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-react": "^7.10.1",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
     "copyfiles": "^2.3.0",
     "css-loader": "^3.5.3",
     "html-webpack-plugin": "^4.3.0",
     "sass": "^1.26.7",
     "sass-loader": "^8.0.2",
+    "terser-webpack-plugin": "^3.0.3",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "extract-domain": "^2.2.1",
+    "firebase": "^7.14.6",
+    "getdomain": "^1.3.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "url-parse": "^1.4.7"
   }
 }
