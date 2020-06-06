@@ -9,7 +9,7 @@ export function fetchFAQ(domain) {
       return doc.data();
     }
     else {
-      return [];
+      return {data: []};
     }
   });
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import './firebase-init';
-import AppComponent from './components/app.js';
+import AppComponent from './components/app/app.js';
 
 import './styles.scss';
 
