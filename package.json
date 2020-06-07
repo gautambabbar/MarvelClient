@@ -6,11 +6,12 @@
   "scripts": {
     "copy-background": "&& copyfiles src/background.js -u 1 background.js",
     "copy": "copyfiles manifest.json dist/",
+    "copy-prod": "copyfiles manifest.json gen/",
     "cleandir": "rm -rf dist/*",
     "clean": "npm run cleandir && npm run copy",
     "build": "webpack --config=build-configs/webpack.config.dev.js && npm run copy",
     "watch": "webpack --watch --config=build-configs/webpack.config.dev.js",
-    "prod": "webpack --config=build-configs/webpack.config.prod.js && npm run copy"
+    "prod": "webpack --config=build-configs/webpack.config.prod.js && npm run copy-prod"
   },
   "author": "",
   "license": "ISC",
