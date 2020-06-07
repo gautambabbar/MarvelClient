@@ -24,7 +24,9 @@ module.exports = merge(commonConfig, {
   plugins: [
     new CleanWebpackPlugin(),
     new BundleAnalyzerPlugin({
-      analyzerMode: 'static'
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      reportFilename: path.resolve(__dirname, '../analyzer', 'report.html')
     })
   ]
 });

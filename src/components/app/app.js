@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchFAQ } from '../../api/faq';
+import { fetchFAQAPI } from '../../api/faq';
 import { queryHostNameInCurrentTab } from '../../helpers';
 import LoadingBar from '../../../assets/images/bars.svg';
 import './styles.scss';
@@ -30,18 +30,23 @@ export default class AppComponent extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      fetchingFAQ: true,
+      fetchingFAQ: false,
       faqs: {},
       hostName: '',
       errorMessage: ''
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.getFAQ()
+  }
+
+  getFAQ = async () => {
+    this.setState({fetchingFAQ: true});
     const hostName = await queryHostNameInCurrentTab();
     this.setState({ hostName });
     try {
-      const json = await fetchFAQ(hostName);
+      const json = await fetchFAQAPI(hostName);
       const { faqs } = this.state;
       const updatedFAQs = {
         ...faqs,
@@ -60,42 +65,6 @@ export default class AppComponent extends React.PureComponent {
       });
     }
   }
-
-  // renderFAQ = () => {
-  //   const {faqs, hostName} = this.state;
-  //   if (!faqs[hostName]) return;
-  //   const faqsView = faqs[hostName].data.map((item, index) => (
-  //     <div className="list-item card flx">
-  //       <div>{index + 1}. </div>
-  //       <div className="flx-auto">
-  //         <div>{item.title}</div>
-  //         {item.steps && item.steps.length > 0 && (
-  //           <>
-  //             <div><strong>Steps:</strong></div>
-  //             <div className="numbered-list">
-  //               {item.steps.map(step => (
-  //                 <div className="numbered-item">
-  //                   {step.description}
-  //                   {step.help_link && (
-  //                     <span>&nbsp;&nbsp;
-  //                       <a href={step.help_link} target="_blank">{step.help_link_text || "Click here"}</a>
-  //                     </span>
-  //                   )}
-  //                 </div>
-  //               ))}
-  //             </div>
-  //           </>
-  //         )}
-  //       </div>
-  //     </div>
-  //   ))
-
-  //   return (
-  //     <div className="faq-list list-container">
-  //       {faqsView}
-  //     </div>
-  //   )
-  // }
 
   renderAccordionItemContent = (index) => {
     const {faqs, hostName} = this.state;
@@ -141,7 +110,7 @@ export default class AppComponent extends React.PureComponent {
       <div className="flx flx-vertical h100 app">
         <div className="content-wrapper">
           {hostName && <div>You are on <strong>{hostName}</strong></div>}
-          {/* <h1>FAQs</h1> */}
+          {/* <button className="btn" onClick={this.getFAQ}>FetchFaq</button> */}
           {this.renderFAQ()}
         </div>
         {fetchingFAQ && (
