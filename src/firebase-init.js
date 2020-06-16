@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 // import 'firebase/analytics';
 // import 'firebase/firestore';
 import 'firebase/functions';
@@ -16,3 +16,5 @@ firebase.initializeApp({
 });
 
 // firebase.analytics();
+
+// gtag('js', new Date());

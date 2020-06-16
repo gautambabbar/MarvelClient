@@ -3,6 +3,10 @@
   border: 1px solid #dfe1e5;
   border-radius: 5px;
 
+  &-no-items {
+    padding: 16px 16px 9px;
+  }
+
   &--header {
     padding: 9px 16px;
     margin: 0px;
@@ -19,6 +23,7 @@
       line-height: 1.5;
 
       &-title {
+        font-weight: 500;
         // color: #00bcd4;
       }
 

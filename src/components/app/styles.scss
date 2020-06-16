@@ -5,6 +5,29 @@
     }
   }
 
+  .visited-domain {
+    white-space: nowrap;
+    word-wrap: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .search-wrapper {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    position: relative;
+
+    .cancel-icon {
+      position: absolute;
+      right: 5px;
+      top: 8px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
   .faq-list {
     text-align: left;  
   }

@@ -1,7 +1,9 @@
 import React from 'react';
+import firebase from 'firebase/app';
 import { fetchFAQAPI } from '../../api/faq';
-import { queryHostNameInCurrentTab } from '../../helpers';
+import { queryHostNameInCurrentTab, searchHTML, highlightInHTML } from '../../helpers';
 import LoadingBar from '../../../assets/images/bars.svg';
+import Cancel from '../../../assets/images/cancel.svg';
 import './styles.scss';
 import Accordion from '../accordion';
 
@@ -11,13 +13,7 @@ import Accordion from '../accordion';
     data: [
       {
         'title': 'How to buy this product'
-        'steps': [
-          {
-            description: 'Go to this page',
-            help_link: 'https://store.google.com/help', // optional
-            help_link_text: 'Click to know more details' // optional
-          }
-        ]
+        'content': ''
       }
     ]
   }
@@ -33,8 +29,11 @@ export default class AppComponent extends React.PureComponent {
       fetchingFAQ: false,
       faqs: {},
       hostName: '',
-      errorMessage: ''
+      errorMessage: '',
+      displayedFAQsList: [],
+      searchText: '',
     }
+    this.searchRef = React.createRef()
   }
 
   componentDidMount() {
@@ -47,18 +46,27 @@ export default class AppComponent extends React.PureComponent {
     this.setState({ hostName });
     try {
       const json = await fetchFAQAPI(hostName);
+      firebase.analytics().logEvent('faq fetched', {
+        hostName,
+        dataExists: json.data && json.data.length > 0
+      });
       const { faqs } = this.state;
       const updatedFAQs = {
         ...faqs,
-        [hostName]: json
+        [hostName]: json.data,
       };
       this.setState({
         faqs: updatedFAQs,
+        displayedFAQsList: json.data,
         fetchingFAQ: false
       });
     }
 
     catch (e) {
+      firebase.analytics().logEvent('faq fetch error', {
+        hostName,
+        errorMessage: e.message
+      });
       this.setState({
         fetchingFAQ: false,
         errorMessage: ERR_DEFAULT_MESSAGE
@@ -67,36 +75,40 @@ export default class AppComponent extends React.PureComponent {
   }
 
   renderAccordionItemContent = (index) => {
-    const {faqs, hostName} = this.state;
-    const item = faqs[hostName].data[index];
+    const {displayedFAQsList} = this.state;
+    const item = displayedFAQsList[index];
     return (
-      <>
-        <div><strong>Steps:</strong></div>
-        <div className="numbered-list">
-        {item.steps.map(step => (
-            <div className="numbered-item">
-              {step.description}
-              {step.help_link && (
-                <span>&nbsp;&nbsp;
-                  <a href={step.help_link} target="_blank">{step.help_link_text || "Click here"}</a>
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-      </>
+      <div dangerouslySetInnerHTML={{__html: item.content}}></div>
+      // <>
+      //   <div><strong>Steps:</strong></div>
+      //   <div className="numbered-list">
+      //   {item.steps.map(step => (
+      //       <div className="numbered-item">
+      //         {step.description}
+      //         {step.help_link && (
+      //           <span>&nbsp;&nbsp;
+      //             <a href={step.help_link} target="_blank">{step.help_link_text || "Click here"}</a>
+      //           </span>
+      //         )}
+      //       </div>
+      //     ))}
+      //   </div>
+      // </>
     )
   }
 
   renderFAQ = () => {
-    const {faqs, hostName} = this.state;
-    if (!faqs[hostName]) return;
-    const faqList = faqs[hostName].data.map((item) => ({
+    const {displayedFAQsList, fetchingFAQ} = this.state;
+
+    if(fetchingFAQ) return;
+    
+    const faqList = displayedFAQsList.map((item) => ({
       title: item.title
     }));
 
     return (
       <Accordion 
+        className="faqs"
         headerTitle="FAQs"
         items={faqList} 
         renderAccordionItemContent={this.renderAccordionItemContent} 
@@ -104,13 +116,69 @@ export default class AppComponent extends React.PureComponent {
     )
   }
 
+  searchFAQ = (e) => {
+    const {target: {value}} = e;
+    const {faqs, hostName} = this.state;
+    const searchedFAQList = faqs[hostName].filter((item) => (searchHTML(item.title, value) || searchHTML(item.content, value)));
+    const highlightedList = searchedFAQList.map((item) => ({
+      title: highlightInHTML(item.title, value),//item.title.replace(value, searchHTML(item.title)),
+      content: highlightInHTML(item.content, value)
+    }));
+
+    if(highlightedList.length == 0) {
+      firebase.analytics().logEvent('faq search', {
+        hostName,
+        searchValue: value,
+        results: false
+      });
+    }
+    this.setState({
+      displayedFAQsList: highlightedList,
+      searchText: value
+    })
+  }
+
+  clearSearch = () => {
+    const {faqs, hostName} = this.state;
+    this.setState({
+      searchText: '',
+      displayedFAQsList: faqs[hostName]
+    });
+    this.searchRef.current.focus();
+  }
+
+  onTextboxBlur = (e) => {
+    if(e.target.value) {
+      const {hostName} = this.state;
+      firebase.analytics().logEvent('faq search', {
+        hostName,
+        searchValue: e.target.value,
+        results: true
+      });
+    }
+  }
+
   render() {
-    const { fetchingFAQ, hostName } = this.state;
+    const { fetchingFAQ, faqs, hostName, searchText } = this.state;
     return (
       <div className="flx flx-vertical h100 app">
         <div className="content-wrapper">
-          {hostName && <div>You are on <strong>{hostName}</strong></div>}
+          {hostName && <div className="visited-domain" title={hostName}>You are on <strong>{hostName}</strong></div>}
           {/* <button className="btn" onClick={this.getFAQ}>FetchFaq</button> */}
+          {!fetchingFAQ && faqs[hostName] && faqs[hostName].length > 0 && (
+            <div className="search-wrapper flx">
+              <input 
+                ref={this.searchRef} 
+                className="txt-box flx-auto" 
+                type="text" 
+                placeholder="Search FAQs" 
+                onChange={this.searchFAQ} 
+                value={searchText} 
+                onBlur={this.onTextboxBlur}
+              />
+              {searchText && <img src={Cancel} className="cancel-icon" onClick={this.clearSearch} />}
+            </div>
+          )}
           {this.renderFAQ()}
         </div>
         {fetchingFAQ && (

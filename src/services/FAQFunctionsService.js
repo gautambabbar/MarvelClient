@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { FETCH_FAQ_FUNCTION_NAME } from '../constants';
 
 // firebase.functions().useFunctionsEmulator("http://localhost:5001");
