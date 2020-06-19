@@ -1,6 +1,6 @@
 {
-  "name": "Wingman",
-  "version": "0.0.0.1",
+  "name": "Amigo",
+  "version": "0.0.0.2",
   "description": "Browser based plug-in that helps users navigate through websites through a series of FAQs.",
   "permissions": ["tabs"],
   "browser_action": {
