@@ -1,5 +1,4 @@
 import React from 'react';
-import firebase from 'firebase/app';
 import { fetchFAQAPI } from '../../api/faq';
 import { queryHostNameInCurrentTab, searchHTML, highlightInHTML } from '../../helpers';
 import LoadingBar from '../../../assets/images/bars.svg';
@@ -46,10 +45,7 @@ export default class AppComponent extends React.PureComponent {
     this.setState({ hostName });
     try {
       const json = await fetchFAQAPI(hostName);
-      firebase.analytics().logEvent('faq fetched', {
-        hostName,
-        dataExists: json.data && json.data.length > 0
-      });
+      window['ga']('send', 'event', 'faq-fetch', 'success', hostName);
       const { faqs } = this.state;
       const updatedFAQs = {
         ...faqs,
@@ -63,10 +59,7 @@ export default class AppComponent extends React.PureComponent {
     }
 
     catch (e) {
-      firebase.analytics().logEvent('faq fetch error', {
-        hostName,
-        errorMessage: e.message
-      });
+      window['ga']('send', 'event', 'faq-fetch', 'error', hostName);
       this.setState({
         fetchingFAQ: false,
         errorMessage: ERR_DEFAULT_MESSAGE
@@ -79,21 +72,6 @@ export default class AppComponent extends React.PureComponent {
     const item = displayedFAQsList[index];
     return (
       <div dangerouslySetInnerHTML={{__html: item.content}}></div>
-      // <>
-      //   <div><strong>Steps:</strong></div>
-      //   <div className="numbered-list">
-      //   {item.steps.map(step => (
-      //       <div className="numbered-item">
-      //         {step.description}
-      //         {step.help_link && (
-      //           <span>&nbsp;&nbsp;
-      //             <a href={step.help_link} target="_blank">{step.help_link_text || "Click here"}</a>
-      //           </span>
-      //         )}
-      //       </div>
-      //     ))}
-      //   </div>
-      // </>
     )
   }
 
@@ -125,17 +103,15 @@ export default class AppComponent extends React.PureComponent {
       content: highlightInHTML(item.content, value)
     }));
 
-    if(highlightedList.length == 0) {
-      firebase.analytics().logEvent('faq search', {
-        hostName,
-        searchValue: value,
-        results: false
-      });
+    
+    if(searchedFAQList.length == 0) {
+      ga('send', 'event', 'search', 'false', hostName, value);  
     }
+
     this.setState({
       displayedFAQsList: highlightedList,
       searchText: value
-    })
+    });
   }
 
   clearSearch = () => {
@@ -150,11 +126,7 @@ export default class AppComponent extends React.PureComponent {
   onTextboxBlur = (e) => {
     if(e.target.value) {
       const {hostName} = this.state;
-      firebase.analytics().logEvent('faq search', {
-        hostName,
-        searchValue: e.target.value,
-        results: true
-      });
+      window['ga']('send', 'event', 'search', 'true', hostName, e.target.value);
     }
   }
 

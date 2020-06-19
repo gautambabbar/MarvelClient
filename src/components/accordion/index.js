@@ -17,6 +17,7 @@ export default function Accordion(props) {
       <h2 className="accordion--header">{headerTitle}</h2>
       {items.map((accordionItem, index) => (
         <AccordionItem 
+          key={accordionItem.title}
           {...accordionItem} {...{ renderAccordionItemContent, index }} 
           onAccordionClick={setAccorionItemExpandedState} 
           expanded={expandedAccordionItemState[index]}

@@ -22,9 +22,9 @@ export function highlightInHTML(html, searchTxt) {
     while (i < childNodesLen) {
       const node = item.childNodes[i];
       if (node.nodeType === Node.TEXT_NODE) {
-        const reg = new RegExp(searchTxt, 'gi');
+        const reg = new RegExp(`(${searchTxt})`, 'gi');
         const span = document.createElement('span');
-        span.innerHTML = node.nodeValue.replace(reg, `<mark>${searchTxt}</mark>`);
+        span.innerHTML = node.nodeValue.replace(reg, `<mark>$1</mark>`);
         node.parentNode.replaceChild(span, node);
       }
       else {

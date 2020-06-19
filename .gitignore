@@ -6,3 +6,5 @@ gen.pem
 gen.crx
 dist.crx
 dist.pem
+analytics-config.js
+firebase-config.js
